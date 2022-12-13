@@ -2,7 +2,8 @@ setwd('C:/Users/anura/Downloads/Work Stuff')
 library(readxl)
 library(openxlsx)
 
-id <- c()																																				# make vectors corresponding to columns in the long format
+# make vectors corresponding to columns in the long format
+id <- c()
 visit <- c()
 freeze <- c()
 box <- c()
@@ -24,7 +25,8 @@ row <- c()
 column <- c()
 tissue <- c()
 
-sheet_names <- c('Plasma_V1',																										# make vector with the names of sheets in the sample map
+# make vector with the names of sheets in the sample map
+sheet_names <- c('Plasma_V1',																										
                  'Plasma_V2',
                  'Plasma_V2_temp',
                  'Plasma_V3',
@@ -50,37 +52,47 @@ sheet_names <- c('Plasma_V1',																										# make vector with the na
                  'LPS_V3',
                  'LPS_V4',
                  'LPS_V5')
-
-for (x in sheet_names) {																												# iterate through each sheet in the sample map
+								 
+# iterate through each sheet in the sample map
+for (x in sheet_names) {																												
   i <- 0
-  assign(x, read_excel('biobank_boxes_10_25_22.xlsx', sheet = x))								# make new dataframe called x for each sheet
-  
-  while (i <= nrow(eval(parse(text = x)))) { 																		# iterate through each row of x
-    boxkey = eval(parse(text = x))[(i+3):(i+12), 2:11] 													# locate each boxkey in x and define it as a 10x10 dataframe
-    boxkey_num <- as.numeric(unname(unlist(eval(parse(text = x))[(i+1),1]))) 		# identify boxkey number, skip rows that don't have a boxkey
-    
-		if (is.na(boxkey_num) == FALSE) { 																					# make sure there is a boxkey here
+	
+	# make new dataframe called x for each sheet
+  assign(x, read_excel('biobank_boxes_10_25_22.xlsx', sheet = x))  
+	# iterate through each row of x
+  while (i <= nrow(eval(parse(text = x)))) {
+		# locate each boxkey in x and define it as a 10x10 dataframe
+    boxkey = eval(parse(text = x))[(i+3):(i+12), 2:11]
+		# identify boxkey number, skip rows that don't have a boxkey
+    boxkey_num <- as.numeric(unname(unlist(eval(parse(text = x))[(i+1),1])))
+    # make sure there is a boxkey here
+		if (is.na(boxkey_num) == FALSE) {
 	  numberOfBoxkeys <- numberOfBoxkeys + 1
-      
 			for (a in 1:nrow(boxkey)) {
         for (b in 1:ncol(boxkey)) {
-				
-          if (is.na(unname(unlist(boxkey[a,b]))) == FALSE) { 										# ignore slots without samples
-            ID_visit <- append(ID_visit, unname(unlist(boxkey[a,b]))) 					# add the sample name to a vector
-            row <- append(row, a)																								# add the row to a vector
-            column <- append(column, b)																					# add the column to a vector
-            boxkey_nums <- append(boxkey_nums, boxkey_num)											# add the boxkey number to a vector
-					  tissue <- append(tissue, x)																					# add tissue type to a vector
+					# ignore slots without samples
+          if (is.na(unname(unlist(boxkey[a,b]))) == FALSE) {
+						# add the sample name to a vector
+            ID_visit <- append(ID_visit, unname(unlist(boxkey[a,b])))
+						# add the row to a vector
+            row <- append(row, a)
+						# add the column to a vector
+            column <- append(column, b)
+						# add the boxkey number to a vector
+            boxkey_nums <- append(boxkey_nums, boxkey_num)
+						# add tissue type to a vector
+					  tissue <- append(tissue, x)
           }
         }
       }
     }
-    i = i + 14																																	# move to the next boxkey
+		# move to the next boxkey
+    i = i + 14
   }
-  
   i <- 0
   
-  if (x != 'Plasma_V2_temp' & x != 'WB_V1' & x != 'LPS_V3') {										# only some sheets have another 'column' of boxkeys
+	# only some sheets have another 'column' of boxkeys
+  if (x != 'Plasma_V2_temp' & x != 'WB_V1' & x != 'LPS_V3') {
     while (i < nrow(eval(parse(text = x)))) {
       boxkey = eval(parse(text = x))[(i+3):(i+12), 14:23]
       boxkey_num <- as.numeric(unname(unlist(eval(parse(text = x))[(i+1),13])))
@@ -102,6 +114,6 @@ for (x in sheet_names) {																												# iterate through each sheet
     }
   }
 }
+# write a dataframe with the desired columns and make a new excel spreadsheet
 df <- data.frame(boxkey_nums, tissue, ID_visit, row, column)
 write.xlsx(df,'C:/Users/anura/Downloads/Work Stuff/NEW_SHEET.xlsx',colNames = TRUE)
-print('done loading')

@@ -1,4 +1,4 @@
-setwd('C:/Users/anura/Downloads/Work Stuff')
+setwd('C:/Users/anura/Docoments/College/Nievergelt Lab')
 library(readxl)
 library(openxlsx)
 
@@ -116,4 +116,4 @@ for (x in sheet_names) {
 }
 # write a dataframe with the desired columns and make a new excel spreadsheet
 df <- data.frame(boxkey_nums, tissue, ID_visit, row, column)
-write.xlsx(df,'C:/Users/anura/Downloads/Work Stuff/NEW_SHEET.xlsx',colNames = TRUE)
+write.xlsx(df,'C:/Users/anura/Documents/College/Nievergelt Lab/NEW_SHEET.xlsx',colNames = TRUE)

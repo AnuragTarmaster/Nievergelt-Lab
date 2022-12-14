@@ -58,18 +58,23 @@ for (x in sheet_names) {
 	i <- 0
 	
 	# make new dataframe called x for each sheet
-	assign(x, read_excel('biobank_boxes_10_25_22.xlsx', sheet = x))  
+	assign(x, read_excel('biobank_boxes_10_25_22.xlsx', sheet = x))
+	
 	# iterate through each row of x
 	while (i <= nrow(eval(parse(text = x)))) {
+	
 		# locate each boxkey in x and define it as a 10x10 dataframe
 		boxkey = eval(parse(text = x))[(i+3):(i+12), 2:11]
+		
 		# identify boxkey number, skip rows that don't have a boxkey
 		boxkey_num <- as.numeric(unname(unlist(eval(parse(text = x))[(i+1),1])))
+		
 		# make sure there is a boxkey here
 		if (is.na(boxkey_num) == FALSE) {
 		numberOfBoxkeys <- numberOfBoxkeys + 1
 			for (a in 1:nrow(boxkey)) {
 				for (b in 1:ncol(boxkey)) {
+				
 					# ignore slots without samples
 					if (is.na(unname(unlist(boxkey[a,b]))) == FALSE) {
 						# add the sample name to a vector

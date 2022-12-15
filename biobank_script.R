@@ -2,28 +2,13 @@ setwd('~/College/Nievergelt Lab')
 library(readxl)
 library(openxlsx)
 
-# make vectors corresponding to columns in the long format
-id <- c()
-visit <- c()
-freeze <- c()
-box <- c()
-box.letter <- c()
-check <- c()
-pulled <- c()
-pulled_data <- c()
-Requestor <- c()
-project <- c()
-returned <- c()
-returned_aliquots_boxkey <- c()
-total_N_aliquot <- c()
-excluded <- c()
-
 boxkey_nums <- c()
 numberOfBoxkeys <- 0
 ID_visit <- c()
 row <- c()
 column <- c()
 tissue <- c()
+LPS_concentration <- c()
 
 # make vector with the names of sheets in the sample map
 sheet_names <- c('Plasma_V1',																										
@@ -62,6 +47,7 @@ for (x in sheet_names) {
 	
 	# iterate through each row of x
 	while (i <= nrow(eval(parse(text = x)))) {
+		level <- 0
 	
 		# locate each boxkey in x and define it as a 10x10 dataframe
 		boxkey = eval(parse(text = x))[(i+3):(i+12), 2:11]
@@ -87,6 +73,14 @@ for (x in sheet_names) {
 						boxkey_nums <- append(boxkey_nums, boxkey_num)
 						# add tissue type to a vector
 						tissue <- append(tissue, x)
+						
+						# add concentration for LPS
+						if (x == 'LPS_V1' | x == 'LPS_V2' | x == 'LPS_V3' | x == 'LPS_V4' | x == 'LPS_V5') {
+							LPS_concentration <- append(LPS_concentration, level)
+							if (level < 3) {
+								level <- level + 1
+							} else level <- 0
+						} else LPS_concentration <- append(LPS_concentration, NA)
 					}
 				}
 			}
@@ -99,6 +93,7 @@ for (x in sheet_names) {
 	# only some sheets have another 'column' of boxkeys
 	if (x != 'Plasma_V2_temp' & x != 'WB_V1' & x != 'LPS_V3') {
 		while (i < nrow(eval(parse(text = x)))) {
+			level <- 0
 			boxkey = eval(parse(text = x))[(i+3):(i+12), 14:23]
 			boxkey_num <- as.numeric(unname(unlist(eval(parse(text = x))[(i+1),13])))
 			if (is.na(boxkey_num) == FALSE) {
@@ -111,6 +106,12 @@ for (x in sheet_names) {
 							column <- append(column, b)
 							boxkey_nums <- append(boxkey_nums, boxkey_num)
 							tissue <- append(tissue, x)
+							if (x == 'LPS_V1' | x == 'LPS_V2' | x == 'LPS_V4' | x == 'LPS_V5') {
+								LPS_concentration <- append(LPS_concentration, level)
+								if (level < 3) {
+									level <- level + 1
+								} else level <- 0
+							} else LPS_concentration <- append(LPS_concentration, NA)
 						}
 					}
 				}
@@ -120,5 +121,5 @@ for (x in sheet_names) {
 	}
 }
 # write a dataframe with the desired columns and make a new excel spreadsheet
-df <- data.frame(boxkey_nums, tissue, ID_visit, row, column)
+df <- data.frame(boxkey_nums, tissue, ID_visit, LPS_concentration, row, column)
 write.xlsx(df,'C:/Users/anura/Documents/College/Nievergelt Lab/NEW_SHEET.xlsx',colNames = TRUE)

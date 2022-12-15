@@ -9,6 +9,7 @@ row <- c()
 column <- c()
 tissue <- c()
 LPS_concentration <- c()
+box_letter <- c()
 
 # make vector with the names of sheets in the sample map
 sheet_names <- c('Plasma_V1',																										
@@ -63,16 +64,24 @@ for (x in sheet_names) {
 				
 					# ignore slots without samples
 					if (is.na(unname(unlist(boxkey[a,b]))) == FALSE) {
+						
 						# add the sample name to a vector
 						ID_visit <- append(ID_visit, unname(unlist(boxkey[a,b])))
+						
 						# add the row to a vector
 						row <- append(row, a)
+						
 						# add the column to a vector
 						column <- append(column, b)
+						
 						# add the boxkey number to a vector
 						boxkey_nums <- append(boxkey_nums, boxkey_num)
+						
 						# add tissue type to a vector
 						tissue <- append(tissue, x)
+						
+						# add box letter
+						box_letter <- append(box_letter, 'A')
 						
 						# add concentration for LPS
 						if (x == 'LPS_V1' | x == 'LPS_V2' | x == 'LPS_V3' | x == 'LPS_V4' | x == 'LPS_V5') {
@@ -106,6 +115,7 @@ for (x in sheet_names) {
 							column <- append(column, b)
 							boxkey_nums <- append(boxkey_nums, boxkey_num)
 							tissue <- append(tissue, x)
+							box_letter <- append(box_letter, 'B')
 							if (x == 'LPS_V1' | x == 'LPS_V2' | x == 'LPS_V4' | x == 'LPS_V5') {
 								LPS_concentration <- append(LPS_concentration, level)
 								if (level < 3) {
@@ -121,5 +131,6 @@ for (x in sheet_names) {
 	}
 }
 # write a dataframe with the desired columns and make a new excel spreadsheet
-df <- data.frame(boxkey_nums, tissue, ID_visit, LPS_concentration, row, column)
-write.xlsx(df,'C:/Users/anura/Documents/College/Nievergelt Lab/NEW_SHEET.xlsx',colNames = TRUE)
+df <- data.frame(boxkey_nums, box_letter, tissue, ID_visit, LPS_concentration, row, column)
+names(df) = c('boxkey', 'box letter', 'tissue', 'ID_visit', 'LPS', 'row', 'column')
+write.xlsx(df,'C:/Users/anura/Documents/College/Nievergelt Lab/new sheet.xlsx',colNames = TRUE)

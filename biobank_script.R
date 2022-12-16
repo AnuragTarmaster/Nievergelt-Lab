@@ -130,7 +130,32 @@ for (x in sheet_names) {
 		}
 	}
 }
+
+# format ids to get rid of aliquot information
+cleanID <- ID_visit
+cleanID <- gsub(' - ', '-', cleanID)
+cleanID <- gsub('-1', '', cleanID)
+cleanID <- gsub('-2', '', cleanID)
+cleanID <- gsub('-3', '', cleanID)
+cleanID <- gsub('-4', '', cleanID)
+cleanID <- gsub('-5', '', cleanID)
+cleanID <- gsub('-6', '', cleanID)
+cleanID <- gsub('-7', '', cleanID)
+cleanID <- gsub('-8', '', cleanID)
+
+# format tissue types
+tissue_temp <- tissue
+tissue_temp <- gsub('_V1', '', tissue_temp)
+tissue_temp <- gsub('_V2', '', tissue_temp)
+tissue_temp <- gsub('_V3', '', tissue_temp)
+tissue_temp <- gsub('_V4', '', tissue_temp)
+tissue_temp <- gsub('_V5', '', tissue_temp)
+tissue_temp <- gsub('_V2_temp', '', tissue_temp)
+
+# make superID
+superID <- paste(boxkey_nums, cleanID, box_letter, tissue_temp, row, column, sep = '.')
+
 # write a dataframe with the desired columns and make a new excel spreadsheet
-df <- data.frame(boxkey_nums, box_letter, tissue, ID_visit, LPS_concentration, row, column)
-names(df) = c('boxkey', 'box letter', 'tissue', 'ID_visit', 'LPS', 'row', 'column')
+df <- data.frame(boxkey_nums, box_letter, tissue, ID_visit, LPS_concentration, row, column, superID)
+names(df) = c('boxkey', 'box letter', 'tissue', 'ID_visit', 'LPS', 'row', 'column', 'superID')
 write.xlsx(df,'C:/Users/anura/Documents/College/Nievergelt Lab/new sheet.xlsx',colNames = TRUE)

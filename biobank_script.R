@@ -100,7 +100,7 @@ for (x in sheet_names) {
 	i <- 0
   
 	# only some sheets have another 'column' of boxkeys
-	if (x != 'Plasma_V2_temp' & x != 'WB_V1' & x != 'LPS_V3') {
+	if (x != 'Plasma_V2_temp' & x != 'LPS_V3') {
 		while (i < nrow(eval(parse(text = x)))) {
 			level <- 0
 			boxkey = eval(parse(text = x))[(i+3):(i+12), 14:23]
@@ -153,7 +153,7 @@ tissue_temp <- gsub('_V5', '', tissue_temp)
 tissue_temp <- gsub('_V2_temp', '', tissue_temp)
 
 # make superID
-superID <- paste(boxkey_nums, cleanID, box_letter, tissue_temp, row, column, sep = '.')
+superID <- paste(boxkey_nums, cleanID, box_letter, tissue_temp, row, column, sep = '_')
 
 # write a dataframe with the desired columns and make a new excel spreadsheet
 df <- data.frame(boxkey_nums, box_letter, tissue, ID_visit, LPS_concentration, row, column, superID)

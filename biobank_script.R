@@ -1,4 +1,4 @@
-setwd('~/College/Nievergelt Lab')
+#setwd('~/College/Nievergelt Lab')
 library(readxl)
 library(openxlsx)
 
@@ -81,7 +81,7 @@ for (x in sheet_names) {
 						tissue <- append(tissue, x)
 						
 						# add box letter
-						box_letter <- append(box_letter, 'A')
+						box_letter <- append(box_letter, unname(unlist(eval(parse(text = x))[(i+1),5])))
 						
 						# add concentration for LPS
 						if (x == 'LPS_V1' | x == 'LPS_V2' | x == 'LPS_V3' | x == 'LPS_V4' | x == 'LPS_V5') {
@@ -100,7 +100,7 @@ for (x in sheet_names) {
 	i <- 0
   
 	# only some sheets have another 'column' of boxkeys
-	if (x != 'Plasma_V2_temp' & x != 'LPS_V3') {
+	if (x != 'Plasma_V2_temp') {
 		while (i < nrow(eval(parse(text = x)))) {
 			level <- 0
 			boxkey = eval(parse(text = x))[(i+3):(i+12), 14:23]
@@ -115,7 +115,7 @@ for (x in sheet_names) {
 							column <- append(column, b)
 							boxkey_nums <- append(boxkey_nums, boxkey_num)
 							tissue <- append(tissue, x)
-							box_letter <- append(box_letter, 'B')
+							box_letter <- append(box_letter, unname(unlist(eval(parse(text = x))[(i+1),17])))
 							if (x == 'LPS_V1' | x == 'LPS_V2' | x == 'LPS_V4' | x == 'LPS_V5') {
 								LPS_concentration <- append(LPS_concentration, level)
 								if (level < 3) {
@@ -158,4 +158,6 @@ superID <- paste(boxkey_nums, cleanID, box_letter, tissue_temp, row, column, sep
 # write a dataframe with the desired columns and make a new excel spreadsheet
 df <- data.frame(boxkey_nums, box_letter, tissue, ID_visit, LPS_concentration, row, column, superID)
 names(df) = c('boxkey', 'box letter', 'tissue', 'ID_visit', 'LPS', 'row', 'column', 'superID')
-write.xlsx(df,'C:/Users/anura/Documents/College/Nievergelt Lab/new sheet.xlsx',colNames = TRUE)
+
+#write.xlsx(df, 'C:/Users/anura/Documents/College/Nievergelt Lab/new sheet.xlsx', colNames = TRUE)
+write.xlsx(df, 'F:/new sheet.xlsx', colNames = TRUE)

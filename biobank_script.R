@@ -1,4 +1,4 @@
-#setwd('~/College/Nievergelt Lab')
+setwd('~/College/Nievergelt Lab')
 library(readxl)
 library(openxlsx)
 
@@ -37,7 +37,9 @@ sheet_names <- c('Plasma_V1',
                  'LPS_V2',
                  'LPS_V3',
                  'LPS_V4',
-                 'LPS_V5')
+                 'LPS_V5',
+				 'LPS_returned_aliquots'
+				)
 								 
 # iterate through each sheet in the sample map
 for (x in sheet_names) {																												
@@ -131,9 +133,19 @@ for (x in sheet_names) {
 	}
 }
 
-# format ids to get rid of aliquot information
 cleanID <- ID_visit
+
+# format ids to get rid of spaces and astericks
 cleanID <- gsub(' - ', '-', cleanID)
+cleanID <- gsub('  - ', '-', cleanID)
+cleanID <- gsub('- ', '-', cleanID)
+cleanID <- gsub('-  ', '-', cleanID)
+cleanID <- gsub(' -  ', '-', cleanID)
+cleanID <- gsub(' -', '-', cleanID)
+cleanID <- gsub('-  ', '-', cleanID)
+cleanID <- gsub('\\*', '', cleanID)
+
+# format ids to get rid of aliquot information
 cleanID <- gsub('-1', '', cleanID)
 cleanID <- gsub('-2', '', cleanID)
 cleanID <- gsub('-3', '', cleanID)
@@ -156,8 +168,8 @@ tissue_temp <- gsub('_V2_temp', '', tissue_temp)
 superID <- paste(boxkey_nums, cleanID, box_letter, tissue_temp, row, column, sep = '_')
 
 # write a dataframe with the desired columns and make a new excel spreadsheet
-df <- data.frame(boxkey_nums, box_letter, tissue, ID_visit, LPS_concentration, row, column, superID)
+df <- data.frame(boxkey_nums, box_letter, tissue, cleanID, LPS_concentration, row, column, superID)
 names(df) = c('boxkey', 'box letter', 'tissue', 'ID_visit', 'LPS', 'row', 'column', 'superID')
 
-#write.xlsx(df, 'C:/Users/anura/Documents/College/Nievergelt Lab/new sheet.xlsx', colNames = TRUE)
-write.xlsx(df, 'F:/new sheet.xlsx', colNames = TRUE)
+write.xlsx(df, 'C:/Users/anura/Documents/College/Nievergelt Lab/new sheet.xlsx', colNames = TRUE)
+#write.xlsx(df, 'F:/new sheet.xlsx', colNames = TRUE)

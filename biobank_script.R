@@ -38,8 +38,7 @@ sheet_names <- c('Plasma_V1',
                  'LPS_V3',
                  'LPS_V4',
                  'LPS_V5',
-				 'LPS_returned_aliquots'
-				)
+                 'LPS_returned_aliquots')
 								 
 # iterate through each sheet in the sample map
 for (x in sheet_names) {																												
